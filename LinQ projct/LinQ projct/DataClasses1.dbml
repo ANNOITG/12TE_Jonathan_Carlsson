@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Dropthebass" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\Dropthebass.mdf;Integrated Security=True;Connect Timeout=30" SettingsObjectName="LinQ_projct.Properties.Settings" SettingsPropertyName="DropthebassConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Band" Member="Bands">
+    <Type Name="Band">
+      <Column Name="Band_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Band_Name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="Startyear" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="From_Location" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Info" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Members" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Band_Record" Member="Records" ThisKey="Band_ID" OtherKey="Band" Type="Record" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Record" Member="Records">
+    <Type Name="Record">
+      <Column Name="Record_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Band" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Record_name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="Company_Name" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Releasedate" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Association Name="Band_Record" Member="Band1" ThisKey="Band" OtherKey="Band_ID" Type="Band" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>
