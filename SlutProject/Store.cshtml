@@ -1,0 +1,36 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.Title = "Store";
+    var db = Database.Open("SlutprojektDatabase");
+    var prodList = db.Query("SELECT * FROM Products ");
+}
+    <div class="userhandling">
+    <h1>Vapen</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Thumbnail</th>
+                <th>Product</th>
+                <th>Info</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th> </th>
+                
+            </tr>
+        </thead>
+        <tbody>
+        @foreach(var product in prodList){
+          <tr>
+            <td><img src="@Href("~/" + product.thumbImage)" alt="Thumbnail missing" /></td>
+            <td>@product.ProductName</td>
+            <td>@product.Info</td>
+            <td>@product.Price</td>
+            <td>@product.Category</td>
+            <td><a href="@Href("~/CachingPage?ID=" + product.Id)">Buy</a></td>
+          </tr>
+        }
+        </tbody>
+    </table>
+    </div>
+
+

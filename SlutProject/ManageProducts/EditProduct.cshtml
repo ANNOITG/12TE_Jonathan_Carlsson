@@ -1,0 +1,120 @@
+﻿@{
+    var db = Database.Open("SlutprojektDatabase");
+    var prod = db.QuerySingle("SELECT * FROM Products WHERE Id = " + Request["Id"]);
+
+    var Id = "";
+    WebImage photo = null;
+    var newFileName = "";
+    var imagePath = "";
+    var imageThumbPath = "";
+    var Name = "";
+    var Info = "";
+    var Price = "";
+    var Stock = "";
+    var Category = "";
+
+    Validation.Add("Id", Validator.Integer("Must be an integer"));
+    Validation.RequireField("Name");
+    Validation.RequireField("Price");
+    Validation.RequireField("Stock");
+    Validation.RequireField("Category");
+    Validation.RequireField("Info");
+    Validation.Add("Price", Validator.Integer("Must be an integer"));
+    Validation.Add("Stock", Validator.Integer("Must be an integer"));
+
+    
+    if(IsPost && Validation.IsValid())
+    {
+        photo = WebImage.GetImageFromRequest(Request.Form["Image"]);
+        if (photo != null)
+        {
+        var fullpathThumb = Server.MapPath(prod.thumbImage);
+        var fullPathImage = Server.MapPath(prod.ProductImage);
+
+
+        if (File.Exists(fullPathImage))
+        {
+            File.Delete(fullPathImage);
+        }
+
+        if (File.Exists(fullpathThumb))
+        {
+            File.Delete(fullpathThumb);
+        }
+        
+            
+            
+            
+        newFileName = Guid.NewGuid().ToString() + "_" +
+            Path.GetFileName(photo.FileName);
+            
+        imagePath = @"ManageProducts/ProdImg/" + newFileName;
+        photo.Save(@"~/" + imagePath);
+            
+        imageThumbPath = @"ManageProducts/ProdImg/Thumb/" + newFileName;
+        photo.Resize(width: 60, height: 60, preserveAspectRatio: true,
+            preventEnlarge: true);
+        photo.Save(@"~/" + imageThumbPath);
+            
+    }
+    else
+    {
+        imagePath = prod.ImagePath;
+        imageThumbPath = prod.ThumbImg;
+    }
+        
+    Name = Request.Form["Name"];
+    Info = Request.Form["Info"];
+    Price = Request.Form["Price"];
+    Stock = Request.Form["Stock"];
+
+    var updateCommand = "UPDATE Products SET ProductName=@1, ProductImage=@2, thumbImage=@3, Info=@4, Category=@5, Price=@6, Stock=@7 WHERE ProductID = " + Request["ID"];
+    db.Execute(updateCommand, Id, Name, imagePath, imageThumbPath, Info, Category, Price, Stock);
+    Response.Redirect("~/ManageProducts/ProductList.cshtml");
+        
+    }
+}
+
+<form method="post" enctype="multipart/form-data">
+    <fieldset>
+        <legend>Edit Product</legend>
+
+        <p>
+            <label for="Name">Product name:</label>
+            <input type="text" name="Name" value="@(IsPost ? Request.Form["Name"] : prod.Name)" />
+        </p>
+
+        <p>
+            <label for="Image">Image</label>
+            <input name="Image" type="file" value="@(IsPost ? Request.Form["Image"] : prod.ImagePath)" />
+            <br />
+        </p>
+
+        <p>
+            <label for="Info">Specification:</label>
+            <textarea name="Info">@(IsPost ? Request.Form["Info"] : prod.ProductInfo)</textarea>
+        </p>
+
+        <p>
+            <label for="Category">Category:</label>
+            <select name="Category">
+                <option value="Pistoler" selected="@((IsPost ? Request.Form["Category"] : prod.ProductCategory) == "Pistoler" ? "selected" : "" )">Pistoler</option>
+                <option value="Automatkarbiner" selected="@((IsPost ? Request.Form["Category"] : prod.ProductCategory) == "Automatkarbiner" ? "selected" : "" )">Automatkarbiner</option>
+                <option value="K-pistar" selected="@((IsPost ? Request.Form["Category"] : prod.ProductCategory) == "K-pistar" ? "selected" : "" )">K-pistar</option>
+                <option value="Kulsprutor" selected="@((IsPost ? Request.Form["Category"] : prod.ProductCategory) == "Kulsprutor" ? "selected" : "" )">Kulsprutor</option>
+            </select>
+        </p>
+
+        <p>
+            <label for="Price">Price:</label>
+            <input name="Price" type="number" value="@(IsPost ? Request.Form["Price"] : prod.Price)" />
+        </p>
+
+        <p>
+            <label for="Stock">Amount left:</label>
+            <input name="Stock" type="number" value="@(IsPost ? Request.Form["Stock"] : prod.Stock)" />
+        </p>
+
+        <input type="submit" value="Submit" />
+    </fieldset>
+</form>

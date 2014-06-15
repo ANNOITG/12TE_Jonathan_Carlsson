@@ -1,0 +1,55 @@
+﻿body {
+    background-image: url(/Pictures/Background_Carbon.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.userhandling {
+    background: #221E1D;
+    color: #D5D3D4;
+    padding: 0px;
+    
+}
+
+.userhandlingheader {
+    display: inline-block;
+    padding: 10px;
+}
+
+#homepageheader {
+    background-color: darkred;
+    color: white;
+}
+
+.menubar p a {
+    padding: 5px;
+    text-decoration: none;
+    color: black;
+}
+
+form {
+    padding: 10px;
+}
+
+.menubar {
+    background-color: darkred;
+    padding: 0px;
+    margin-bottom: -16px;
+}
+
+#homepage {
+    background: #221E1D;
+    color: #D5D3D4;
+    padding: 0px;
+}
+
+table {
+    border-collapse: collapse;
+}
+.userhandling a {
+    text-decoration: none;
+}
+
+table, td, th {
+    border: 2px solid green;
+}

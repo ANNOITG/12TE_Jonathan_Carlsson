@@ -1,0 +1,110 @@
+﻿ @{
+
+    var username = "";
+
+    var password = "";
+
+    var errorMessage = "";
+
+   
+
+    if(IsPost){
+
+        username = Request["username"];
+
+        password = Request["password"];
+
+        if(WebSecurity.Login(username,password,true)){
+
+            Response.Redirect("~/Home");
+
+        }
+
+        else
+
+        {
+
+            errorMessage = "Login was not successful.";
+
+        }
+
+    }
+
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8" />
+
+        <link rel="stylesheet" href="@Href("~/SlutProject.css")" type="text/css" />
+
+        <title>Login</title>
+
+    </head>
+
+    <body>
+
+        
+        <div class="userhandling">
+        <form method="post">
+        <h1>Login</h1>
+
+            @if(WebSecurity.IsAuthenticated){
+
+                <p>You are currently logged in as @WebSecurity.CurrentUserName.
+
+                  <a href="@Href("~/Logout")">Log out</a>
+
+                </p>
+
+            }
+
+          <p>
+
+            <label for="username">Username:</label><br/>
+
+            <input type="text" name="username" id="username" value="" />
+
+          </p>
+
+          <p>
+
+            <label for="password">Password:</label><br/>
+
+            <input type="password" name="password" id="password" value="" />
+
+          </p>   
+
+          <p>
+
+            <input type="submit" value="Submit" />
+
+          </p>   
+
+           
+
+          <p>Not registered? <a href="@Href("~/Register")">Register</a></p>
+
+          <p><a href="@Href("~/Home")">Return to home page</a></p>
+
+           
+
+        </form>
+        </div>
+        <p>
+
+            @if(errorMessage != ""){
+
+                <span class="errorMessage">@errorMessage</span>
+
+            }
+
+        </p>
+
+   </body>
+
+</html>

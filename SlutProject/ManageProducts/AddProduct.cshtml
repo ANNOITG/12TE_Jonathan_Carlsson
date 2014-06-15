@@ -1,0 +1,101 @@
+﻿@{
+    var Id ="";
+    WebImage photo = null;
+    var newFileName = "";
+    var imagePath = "";
+    var imageThumbPath = "";
+    var Name = "";
+    var Info = "";
+    var Price = "";
+    var Stock = "";
+    var Category = "";
+    
+    Validation.Add("Id", Validator.Integer("Must be an integer"));
+    Validation.RequireField("Name");
+    Validation.RequireField("Price");
+    Validation.RequireField("Stock");
+    Validation.RequireField("Category");
+    Validation.RequireField("Info");
+    Validation.Add("Price", Validator.Integer("Must be an integer"));
+    Validation.Add("Stock", Validator.Integer("Must be an integer"));
+    
+    if(IsPost)
+    {
+        photo = WebImage.GetImageFromRequest(Request.Form["Image"]);
+        if (photo != null && Validation.IsValid())
+        {
+            
+            newFileName = Guid.NewGuid().ToString() + "_" +
+                Path.GetFileName(photo.FileName);
+            
+            imagePath = @"ManageProducts/ProdImg/" + newFileName;
+            photo.Save(@"~/" + imagePath);
+            
+            imageThumbPath = @"ManageProducts/ProdImg/thumb/" + newFileName;
+            photo.Resize(width: 60, height: 60, preserveAspectRatio: true,
+                preventEnlarge: true);
+            photo.Save(@"~/" + imageThumbPath);
+
+            Name = Request.Form["Name"];
+            Info = Request.Form["Info"];
+            Price = Request.Form["Price"];
+            Stock = Request.Form["Stock"];
+
+            var db = Database.Open("SlutprojektDatabase");
+            var insertCommand = "INSERT INTO Products (Id, ProductName, ProductImage, thumbImage, Info, Category, Price, Stock) VALUES(@0, @1, @2, @3, @4, @5, @6, @7)";
+            db.Execute(insertCommand, Id, Name, imagePath, imageThumbPath, Info, Category, Price, Stock);
+            Response.Redirect("~/ManageProducts/ProductList.cshtml");
+        }
+    }
+}
+<div class="userhandling">
+<h1>Add Product</h1>
+<form method="post" enctype="multipart/form-data">
+    <fieldset>
+        <legend>Add Product</legend>
+
+        <p>
+            <label for="Id">Product Id:</label>
+            <input name="Id" type="number" value="@Request.Form["Id"]" />
+        </p>
+
+        <p>
+            <label for="Name">Product name:</label>
+            <input type="text" name="Name" value="@Request.Form["Name"]" />
+        </p>
+
+        <p>
+            <label for="Image">Image</label>
+            <input name="Image" type="file" value="@Request.Form["Image"]" />
+            <br />
+        </p>
+
+        <p>
+            <label for="Info">Specification:</label>
+            <textarea name="Info">@Request.Form["Info"]</textarea>
+        </p>
+
+        <p>
+            <label for="Category">Category:</label>
+            <select name="Category">
+                <option value="Pistoler">Pistoler</option>
+                <option value="Automatkarbiner">Automatkarbiner</option>
+                <option value="K-pistar">K-pistar</option>
+                <option value="Kulsprutor">Kulsprutor</option>
+            </select>
+        </p>
+
+        <p>
+            <label for="Price">Price:</label>
+            <input name="Price" type="number" value="@Request.Form["Price"]" />
+        </p>
+
+        <p>
+            <label for="Stock">Amount left:</label>
+            <input name="Stock" type="number" value="@Request.Form["Stock"]" />
+        </p>
+
+        <input type="submit" value="Submit" />
+    </fieldset>
+</form>
+</div>

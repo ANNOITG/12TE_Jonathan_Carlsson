@@ -1,0 +1,13 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    
+   var db = Database.Open("SlutprojektDatabase");
+   var prod = db.QuerySingle("Select * from Product where Id =" + Request["ID"]);
+
+
+}
+<div>
+    <p>@prod.Name</p>
+    <p><img class="DisplayPicture" alt ="No image found" src="@prod.ImagePath"></p>
+    <p>@prod.Description</p>
+</div>

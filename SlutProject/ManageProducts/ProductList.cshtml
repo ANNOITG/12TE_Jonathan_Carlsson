@@ -1,0 +1,28 @@
+﻿@{
+    var db = Database.Open("SlutprojektDatabase");
+    var prodList = db.Query("SELECT * FROM Products");
+}
+<div class="userhandling">
+<a href="@Href("~/ManageProducts/AddProduct.cshtml")">Add product</a>
+
+
+<table>
+    <tr>
+        <th>ThumbNail</th>
+        <th>Name</th>
+        <th>Info</th>
+        <th>Price</th>
+    </tr>
+    @foreach(var product in prodList)
+    {
+        <tr>
+            <td><img src="@Href("~/" + product.thumbImage)" alt="Thumbnail missing" /></td>
+            <td>@product.ProductName</td>
+            <td>@product.Info</td>
+            <td>@product.Price</td>
+            <td>@product.Category</td>
+            <td><a href="@Href("~/ManageProducts/DeleteProduct.cshtml?ID=" + product.Id)">Delete</a></td>            
+        </tr>
+    }
+</table>
+</div>

@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <link href="~/Slutproject.css" rel="stylesheet" type="text/css" />
+        <title>@Page.Title</title>
+        @RenderSection("head", required: false)
+    </head>
+    <body>
+        <div class="menubar">
+            <p>
+                <a href="@Href("~/Home")">Home</a>
+                <a href="@Href("~/Store")">Store</a>
+                <a href="@Href("~/Cachingpage")">Shopping cart</a>
+                @if(User.IsInRole("Admin")){
+                @:<a href="@Href("~/Admin/ManageRoles")">Manage Roles</a>
+                @:<a href="@Href("~/ManageProducts/ProductList")">Product List</a>
+                }
+                @if(WebSecurity.IsAuthenticated){
+                @:<a href="@Href("~/Logout")">Log out</a>
+                }
+                else{              
+                @:<a href="@Href("~/Login")">Log in</a> |
+                @:<a href="@Href("~/Register")">Register</a>
+                }   
+            </p>
+        </div>
+        @RenderBody()
+    </body>
+</html>

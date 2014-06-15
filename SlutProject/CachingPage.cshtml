@@ -1,0 +1,51 @@
+﻿@{
+    var theKey = WebSecurity.CurrentUserId.ToString();
+    
+    IList<int> kundvagn = (List<int>)WebCache.Get(theKey);
+    
+    if(kundvagn == null)
+    {
+        kundvagn = new List<int>();
+        
+        kundvagn.Add(Request["ID"].AsInt());
+        
+        WebCache.Set(theKey, kundvagn);
+    }
+    else
+    {
+        kundvagn.Add(Request["ID"].AsInt());
+    }
+    
+    var db = Database.Open("SlutprojektDatabase");
+    var queryString = "Select * from Products where ";
+    for (int i = 0; i < kundvagn.Count; i++)
+    {
+        queryString += "Id = " + kundvagn[i];
+
+        if( (i + 1) != kundvagn.Count)
+        {
+            queryString += " or ";
+        }
+    }
+
+    var products = db.Query(queryString);
+    <div class="userhandling">
+    <table>
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Thumbnail</th>
+    </tr>
+    @foreach(var prod in products)
+    {
+        <tr>
+            <td>@prod.ProductName</td>
+            <td>@prod.Price</td>
+            <td><img src="@Href(prod.thumbImage)" /></td>
+        </tr>                 
+    }
+    </table>
+
+    <p>Purchase function not yet implemented</p>
+    </div>
+}

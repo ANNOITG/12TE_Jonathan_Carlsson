@@ -1,0 +1,57 @@
+﻿@{
+    var pid = Request["Id"].AsInt();
+    
+    var delSucImg = false;
+    var delSucThumb = false;
+    var delSucRow = false;
+    
+    try
+    {
+        var db = Database.Open("SlutprojektDatabase");
+        var product = db.QuerySingle("Select * from Products where Id = " + pid);
+
+        var fullpathThumb = Server.MapPath(product.thumbImage);
+        var fullPathImage = Server.MapPath(product.ProductImage);
+        
+        db.Execute("Delete from Products where Id = " + pid);
+        delSucRow = true;
+        
+        if (File.Exists(fullPathImage))
+        {
+            File.Delete(fullPathImage);
+            delSucImg = true;
+        }
+        
+        if(File.Exists(fullpathThumb))
+        {
+            File.Delete(fullpathThumb);
+            delSucThumb = true;
+        }
+        <div class="userhandling">
+        <p>Success deleting product. Return <a href="@Href("~/ManageProducts/ProductList.cshtml")">here</a></p>
+        </div>
+    }
+    catch (Exception e)
+    {
+        if(!delSucRow)
+        {
+            <div class="userhandling">
+            <p>@e.Message</p>
+            </div>
+        }
+        
+        if(!delSucImg)
+        {
+            <div class="userhandling">
+            <p>Image not deleted from server or not found</p>
+            </div>
+        }
+        
+        if(!delSucThumb)
+        {
+            <div class="userhandling">
+            <p>Thumbnail not deleted from server or not found</p>
+            </div>
+        }
+    }
+}

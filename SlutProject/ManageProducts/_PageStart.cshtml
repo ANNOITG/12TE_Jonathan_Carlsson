@@ -1,0 +1,21 @@
+﻿@{
+    if(!Roles.IsUserInRole(WebSecurity.CurrentUserName, "Admin") && !WebSecurity.IsAuthenticated)
+    {
+        Response.SetStatus(HttpStatusCode.Forbidden);
+    }
+}
+
+
+@*MASTER RACE
+      |
+Övre överklass AKA Admins
+        |
+Undre Överklass AKA Moderators
+        |
+Medelkass AKA Users
+        |
+Underklassen AKA Not registered users
+        |
+Plebklassen AKA Not worthy of user privleges
+        |
+Schmuckklassen AKA Worthless pieces of shits*@
